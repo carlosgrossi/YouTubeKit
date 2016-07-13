@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <YTKit/YTPlayerView.h>
 
 //! Project version number for YTKit.
 FOUNDATION_EXPORT double YTKitVersionNumber;
