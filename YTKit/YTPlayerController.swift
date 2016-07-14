@@ -42,6 +42,7 @@ public class YTPlayerController: NSObject, YTPlayerViewDelegate {
     // MARK: - Methods
     public func loadVideoUnderContainerView(containerView:UIView, withSuggestedPlaybackQuality suggestedPlaybackQuality:YTPlaybackQuality) {
         playerView = YTPlayerView(frame: CGRectMake(0, 0, containerView.frame.width, containerView.frame.height))
+        playerView?.backgroundColor = UIColor.clearColor()
         
         guard let localPlayerView = playerView else { return }
         
