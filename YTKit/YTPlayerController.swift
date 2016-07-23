@@ -20,7 +20,7 @@ import ExtensionKit
 // MARK: - YTPlayerController
 public class YTPlayerController: NSObject, YTPlayerViewDelegate {
     
-    private var playerView:YTPlayerView?
+    public var playerView:YTPlayerView?
     
     public static let sharedController = YTPlayerController()
     public var delegate:YTPlayerControllerDelegate?
@@ -46,12 +46,11 @@ public class YTPlayerController: NSObject, YTPlayerViewDelegate {
         
         guard let localPlayerView = playerView else { return }
         
-        containerView.addSubview(localPlayerView)
-        containerView.setupStandardConstraintsForSubview(localPlayerView)
-        
         localPlayerView.delegate = self
         localPlayerView.loadWithVideoId(videoID, playerVars: playerParameters)
         localPlayerView.setPlaybackQuality(suggestedPlaybackQuality)
+        
+        containerView.addSubview(localPlayerView)
     }
     
     public func loadVideoID(videoID:String) {
