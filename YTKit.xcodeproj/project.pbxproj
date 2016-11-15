@@ -14,6 +14,13 @@
 		0E172F301D34786900407E13 /* YTPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E172F2F1D34786900407E13 /* YTPlayerController.swift */; };
 		0E172F441D347CCA00407E13 /* ExtensionKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E172F431D347CC300407E13 /* ExtensionKit.framework */; };
 		0E172F691D35A51100407E13 /* YTAccessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E172F681D35A51100407E13 /* YTAccessController.swift */; };
+		0EC440B01D4FB19600786033 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC440AF1D4FB19600786033 /* Constants.swift */; };
+		0EFC1FA41D4FBC4300CEDBB9 /* YTPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFC1FA31D4FBC4300CEDBB9 /* YTPlaylist.swift */; };
+		0EFC1FA71D4FBDC800CEDBB9 /* YTVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFC1FA61D4FBDC800CEDBB9 /* YTVideo.swift */; };
+		0EFC1FAB1D4FDEF800CEDBB9 /* YTAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFC1FAA1D4FDEF800CEDBB9 /* YTAPI.swift */; };
+		0EFC1FAD1D52A12600CEDBB9 /* YTChannels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFC1FAC1D52A12600CEDBB9 /* YTChannels.swift */; };
+		0EFC1FB31D52AC2D00CEDBB9 /* YTChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFC1FB21D52AC2D00CEDBB9 /* YTChannel.swift */; };
+		0EFC1FC81D5D27E200CEDBB9 /* YTComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFC1FC71D5D27E200CEDBB9 /* YTComment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +43,13 @@
 		0E172F2F1D34786900407E13 /* YTPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlayerController.swift; sourceTree = "<group>"; };
 		0E172F3D1D347CC300407E13 /* ExtensionKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ExtensionKit.xcodeproj; path = ../ExtensionKit/ExtensionKit.xcodeproj; sourceTree = "<group>"; };
 		0E172F681D35A51100407E13 /* YTAccessController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTAccessController.swift; sourceTree = "<group>"; };
+		0EC440AF1D4FB19600786033 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0EFC1FA31D4FBC4300CEDBB9 /* YTPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlaylist.swift; sourceTree = "<group>"; };
+		0EFC1FA61D4FBDC800CEDBB9 /* YTVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTVideo.swift; sourceTree = "<group>"; };
+		0EFC1FAA1D4FDEF800CEDBB9 /* YTAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTAPI.swift; sourceTree = "<group>"; };
+		0EFC1FAC1D52A12600CEDBB9 /* YTChannels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTChannels.swift; sourceTree = "<group>"; };
+		0EFC1FB21D52AC2D00CEDBB9 /* YTChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTChannel.swift; sourceTree = "<group>"; };
+		0EFC1FC71D5D27E200CEDBB9 /* YTComment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTComment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,9 +84,16 @@
 		0E172F0A1D346FC700407E13 /* YTKit */ = {
 			isa = PBXGroup;
 			children = (
+				0EC440AF1D4FB19600786033 /* Constants.swift */,
 				0E172F0B1D346FC700407E13 /* YTKit.h */,
 				0E172F2F1D34786900407E13 /* YTPlayerController.swift */,
 				0E172F681D35A51100407E13 /* YTAccessController.swift */,
+				0EFC1FAA1D4FDEF800CEDBB9 /* YTAPI.swift */,
+				0EFC1FA31D4FBC4300CEDBB9 /* YTPlaylist.swift */,
+				0EFC1FA61D4FBDC800CEDBB9 /* YTVideo.swift */,
+				0EFC1FC71D5D27E200CEDBB9 /* YTComment.swift */,
+				0EFC1FAC1D52A12600CEDBB9 /* YTChannels.swift */,
+				0EFC1FB21D52AC2D00CEDBB9 /* YTChannel.swift */,
 				0E172F191D34716F00407E13 /* YTPlayerView */,
 				0E172F0D1D346FC700407E13 /* Info.plist */,
 			);
@@ -145,7 +166,7 @@
 		0E172EFF1D346FC700407E13 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Carlos Grossi";
 				TargetAttributes = {
 					0E172F071D346FC700407E13 = {
@@ -203,9 +224,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EFC1FB31D52AC2D00CEDBB9 /* YTChannel.swift in Sources */,
+				0EFC1FAD1D52A12600CEDBB9 /* YTChannels.swift in Sources */,
+				0EFC1FA41D4FBC4300CEDBB9 /* YTPlaylist.swift in Sources */,
 				0E172F201D34716F00407E13 /* YTPlayerView.m in Sources */,
+				0EFC1FC81D5D27E200CEDBB9 /* YTComment.swift in Sources */,
+				0EFC1FA71D4FBDC800CEDBB9 /* YTVideo.swift in Sources */,
 				0E172F691D35A51100407E13 /* YTAccessController.swift in Sources */,
+				0EFC1FAB1D4FDEF800CEDBB9 /* YTAPI.swift in Sources */,
 				0E172F301D34786900407E13 /* YTPlayerController.swift in Sources */,
+				0EC440B01D4FB19600786033 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,8 +254,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -275,8 +305,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -296,6 +328,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -309,6 +342,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -321,6 +355,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -330,6 +365,7 @@
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -341,6 +377,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.DayOneDigital.YTKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

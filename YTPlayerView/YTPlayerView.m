@@ -320,7 +320,9 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
 - (void)setPlaybackQuality:(YTPlaybackQuality)suggestedQuality {
   NSString *qualityValue = [YTPlayerView stringForPlaybackQuality:suggestedQuality];
   NSString *command = [NSString stringWithFormat:@"player.setPlaybackQuality('%@');", qualityValue];
-  [self stringFromEvaluatingJavaScript:command];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self stringFromEvaluatingJavaScript:command];
+    });
 }
 
 #pragma mark - Video information methods
@@ -679,9 +681,11 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
 
   // Remove the existing webView to reset any state
   [self.webView removeFromSuperview];
-  _webView = [self createNewWebView];
-  [self addSubview:self.webView];
-
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        _webView = [self createNewWebView];
+        [self addSubview:self.webView];
+    });
+  
   NSError *error = nil;
   NSString *path = [[NSBundle mainBundle] pathForResource:@"YTPlayerView-iframe-player"
                                                    ofType:@"html"];
@@ -721,8 +725,10 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
   NSString *embedHTML = [NSString stringWithFormat:embedHTMLTemplate, playerVarsJsonString];
   [self.webView loadHTMLString:embedHTML baseURL: self.originURL];
   [self.webView setDelegate:self];
-  self.webView.allowsInlineMediaPlayback = YES;
-  self.webView.mediaPlaybackRequiresUserAction = NO;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.webView.allowsInlineMediaPlayback = YES;
+        self.webView.mediaPlaybackRequiresUserAction = NO;
+    });
   return YES;
 }
 
