@@ -17,6 +17,7 @@ public class YTVideo:YTAPI {
     public var channelIcon:String?
     public var videoTitle:String?
     public var videoDescription:String?
+    public var videoDuration:String?
     public var defaultThumbnail:Thumbnail?
     public var standardThumbnail:Thumbnail?
     public var highThumbnail:Thumbnail?

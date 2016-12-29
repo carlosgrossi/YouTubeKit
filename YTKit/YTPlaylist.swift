@@ -96,13 +96,13 @@ public class YTPlaylist: YTAPI {
         
         for item in items {
             guard let item = item as? NSDictionary else { continue }
-            
             let video = YTVideo()
             video.videoId = item.valueForKeyPath("id") as? String
             video.channelId = item.valueForKeyPath("snippet.channelId") as? String
             video.channelName = item.valueForKeyPath("snippet.channelTitle") as? String
             video.videoTitle = item.valueForKeyPath("snippet.title") as? String
             video.videoDescription = item.valueForKeyPath("snippet.description") as? String
+            video.videoDuration = item.valueForKeyPath("snippet.description") as? String
             
             if let publishedAt = item.valueForKeyPath("snippet.publishedAt") as? String {
                 let posix = NSLocale(localeIdentifier: "en_US_POSIX")

@@ -13,5 +13,5 @@ public struct APIConstants {
     static let channelsURL = "https://www.googleapis.com/youtube/v3/channels?part=%@&id=%@&pageToken=%@&key=%@"
     static let videoStatisticsURL = "https://www.googleapis.com/youtube/v3/videos?part=%@&id=%@&key=%@"
     static let videoCommentThreads = "https://www.googleapis.com/youtube/v3/commentThreads?part=%@&maxResults=%@&order=%@&videoId=%@&pageToken=%@&textFormat=plainText&key=%@"
-    static let videosListURL = "https://www.googleapis.com/youtube/v3/videos?part=%@&maxResults=50&id=%@&pageToken=%@&key=%@"
+    static let videosListURL = "https://www.googleapis.com/youtube/v3/videos?part=contentDetails,%@&maxResults=50&id=%@&pageToken=%@&key=%@"
 }
