@@ -8,77 +8,77 @@
 
 import Foundation
 
-public class YTPlaylist: YTAPI {
+open class YTPlaylist: YTAPI {
     
-    public var etag:String?
-    public var playlistId:String?
-    public var totalResults:Int?
-    public var resultsPerPage:Int?
-    public var nextPageToken:String?
-    public var prevPageToken:String?
-    public var items:[YTVideo] = []
+    open var etag:String?
+    open var playlistId:String?
+    open var totalResults:Int?
+    open var resultsPerPage:Int?
+    open var nextPageToken:String?
+    open var prevPageToken:String?
+    open var items:[YTVideo] = []
     
     var channels:[String:YTChannel] = [:]
     
-    public func getPlaylistItems(part:String = "snippet", playlistId:String, pageToken:String?, completitionHandler:()->()) {
+    open func getPlaylistItems(_ part:String = "snippet", playlistId:String, pageToken:String?, completitionHandler:@escaping ()->()) {
         guard let url = getPlaylistItemsURL(part, playlistId:playlistId , pageToken:pageToken) else { return }
         self.playlistId = playlistId
         getPlaylistItems(url, completitionHandler:completitionHandler)
     }
     
-    public func getVideosDetails(part:String = "snippet", videosId:String, pageToken:String?, completitionHandler:()->()) {
+    open func getVideosDetails(_ part:String = "snippet", videosId:String, pageToken:String?, completitionHandler:@escaping ()->()) {
         guard let url = getVideosDetailsURL(part, videosId: videosId, pageToken: pageToken) else { return }
         getVideosDetails(url, completitionHandler: completitionHandler)
     }
     
-    public func loadNextPage(completitionHandler:()->()) {
+    open func loadNextPage(_ completitionHandler:@escaping ()->()) {
         guard let playlistId = self.playlistId else { completitionHandler(); return }
         guard let pageToken = self.nextPageToken else { completitionHandler(); return }
         getPlaylistItems(playlistId: playlistId, pageToken: pageToken, completitionHandler: completitionHandler)
     }
     
     // MARK: - Private Methods
-    private func getPlaylistItemsURL(part:String, playlistId:String, pageToken:String?) -> NSURL? {
+    fileprivate func getPlaylistItemsURL(_ part:String, playlistId:String, pageToken:String?) -> URL? {
         let pgToken:String = pageToken == nil ? "" : pageToken!
-        return NSURL(string: APIConstants.playlistItemsURL, args: [part, playlistId, pgToken, apiKey])
+        return URL(string: APIConstants.playlistItemsURL, args: [part, playlistId, pgToken, apiKey])
     }
     
-    private func getVideosDetailsURL(part:String, videosId:String, pageToken:String?) -> NSURL? {
+    fileprivate func getVideosDetailsURL(_ part:String, videosId:String, pageToken:String?) -> URL? {
         let pgToken:String = pageToken == nil ? "" : pageToken!
-        return NSURL(string: APIConstants.videosListURL, args: [part, videosId, pgToken, apiKey])
+        return URL(string: APIConstants.videosListURL, args: [part, videosId, pgToken, apiKey])
     }
     
-    private func getPlaylistItems(url:NSURL, completitionHandler:()->()) {
-        NSURLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
-            NSURLSession.validateURLSessionDataTask(data, response: response, error: error, completitionHandler: { (data, error) in
-                self.getPlaylistItems(NSJSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+    fileprivate func getPlaylistItems(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+            URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
+                self.getPlaylistItems(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
             })
         }
     }
     
-    private func getVideosDetails(url:NSURL, completitionHandler:()->()) {
-        NSURLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
-            NSURLSession.validateURLSessionDataTask(data, response: response, error: error, completitionHandler: { (data, error) in
-                self.getVideosDetails(NSJSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+    fileprivate func getVideosDetails(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+            URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
+                self.getVideosDetails(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
             })
         }
     }
     
-    private func getPlaylistItems(playlistDictionary:NSDictionary?, completitionHandler:()->()) {
+    fileprivate func getPlaylistItems(_ playlistDictionary:NSDictionary?, completitionHandler:@escaping ()->()) {
         guard let playlistDictionary = playlistDictionary else { return }
         
-        etag = playlistDictionary.valueForKeyPath("etag") as? String
-        totalResults = playlistDictionary.valueForKeyPath("pageInfo.totalResults") as? Int
-        resultsPerPage = playlistDictionary.valueForKeyPath("pageInfo.resultsPerPage") as? Int
-        nextPageToken = playlistDictionary.valueForKeyPath("nextPageToken") as? String
-        prevPageToken = playlistDictionary.valueForKeyPath("prevPageToken") as? String
+        etag = playlistDictionary.value(forKeyPath: "etag") as? String
+        totalResults = playlistDictionary.value(forKeyPath: "pageInfo.totalResults") as? Int
+        resultsPerPage = playlistDictionary.value(forKeyPath: "pageInfo.resultsPerPage") as? Int
+        nextPageToken = playlistDictionary.value(forKeyPath: "nextPageToken") as? String
+        prevPageToken = playlistDictionary.value(forKeyPath: "prevPageToken") as? String
         
-        if let playlistVideos = playlistDictionary.valueForKeyPath("items") as? NSArray {
+        if let playlistVideos = playlistDictionary.value(forKeyPath: "items") as? NSArray {
             var videoIds = ""
             
             for playlistVideo in playlistVideos {
-                guard let videoId = playlistVideo.valueForKeyPath("snippet.resourceId.videoId") as? String else { continue }
-                videoIds = videoIds.stringByAppendingString(videoId).stringByAppendingString(",")
+                guard let videoId = (playlistVideo as AnyObject).value(forKeyPath: "snippet.resourceId.videoId") as? String else { continue }
+                videoIds = (videoIds + videoId) + ","
             }
             
             videoIds = String(videoIds.characters.dropLast())
@@ -88,28 +88,28 @@ public class YTPlaylist: YTAPI {
         }
     }
     
-    private func getVideosDetails(videosDictionary:NSDictionary?, completitionHandler:()->()) {
+    fileprivate func getVideosDetails(_ videosDictionary:NSDictionary?, completitionHandler:@escaping ()->()) {
         guard let videosDictionary = videosDictionary else { return }
-        guard let items = videosDictionary.valueForKeyPath("items") as? NSArray else { return }
+        guard let items = videosDictionary.value(forKeyPath: "items") as? NSArray else { return }
         
         var channelIds:[String] = []
         
         for item in items {
             guard let item = item as? NSDictionary else { continue }
             let video = YTVideo()
-            video.videoId = item.valueForKeyPath("id") as? String
-            video.channelId = item.valueForKeyPath("snippet.channelId") as? String
-            video.channelName = item.valueForKeyPath("snippet.channelTitle") as? String
-            video.videoTitle = item.valueForKeyPath("snippet.title") as? String
-            video.videoDescription = item.valueForKeyPath("snippet.description") as? String
-            video.videoDuration = item.valueForKeyPath("snippet.description") as? String
+            video.videoId = item.value(forKeyPath: "id") as? String
+            video.channelId = item.value(forKeyPath: "snippet.channelId") as? String
+            video.channelName = item.value(forKeyPath: "snippet.channelTitle") as? String
+            video.videoTitle = item.value(forKeyPath: "snippet.title") as? String
+            video.videoDescription = item.value(forKeyPath: "snippet.description") as? String
+            video.videoDuration = item.value(forKeyPath: "snippet.description") as? String
             
-            if let publishedAt = item.valueForKeyPath("snippet.publishedAt") as? String {
-                let posix = NSLocale(localeIdentifier: "en_US_POSIX")
-                let dateFormatter = NSDateFormatter()
+            if let publishedAt = item.value(forKeyPath: "snippet.publishedAt") as? String {
+                let posix = Locale(identifier: "en_US_POSIX")
+                let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                 dateFormatter.locale = posix
-                video.publishedAt = dateFormatter.dateFromString(publishedAt)
+                video.publishedAt = dateFormatter.date(from: publishedAt)
             }
             
             video.defaultThumbnail = getThumbnailInfo(item, keyPath: "snippet.thumbnails.default")
@@ -129,7 +129,7 @@ public class YTPlaylist: YTAPI {
             self.items.append(video)
         }
         
-        channelIds.removeDuplicates()        
+        channelIds = channelIds.removeDuplicates()
         let ytChannels = YTChannels(apiKey: super.apiKey)
         
         ytChannels.getChannels(channelsIds: channelIds, pageToken: nil) {
@@ -145,11 +145,11 @@ public class YTPlaylist: YTAPI {
         }
     }
     
-    private func getThumbnailInfo(playlistVideo:NSDictionary, keyPath:String) -> YTVideo.Thumbnail? {
-        if let thumbnail = playlistVideo.valueForKeyPath(keyPath) as? NSDictionary {
-            let height = thumbnail.valueForKeyPath("height") as? Int
-            let width = thumbnail.valueForKeyPath("width") as? Int
-            let url = thumbnail.valueForKeyPath("url") as? String
+    fileprivate func getThumbnailInfo(_ playlistVideo:NSDictionary, keyPath:String) -> YTVideo.Thumbnail? {
+        if let thumbnail = playlistVideo.value(forKeyPath: keyPath) as? NSDictionary {
+            let height = thumbnail.value(forKeyPath: "height") as? Int
+            let width = thumbnail.value(forKeyPath: "width") as? Int
+            let url = thumbnail.value(forKeyPath: "url") as? String
             
             return YTVideo.Thumbnail(height: height, width: width, url: url)
         }

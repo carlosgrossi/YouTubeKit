@@ -8,30 +8,30 @@
 
 import Foundation
 
-public class YTVideo:YTAPI {
-    public var etag:String?
-    public var id:String?
-    public var videoId:String?
-    public var channelId:String?
-    public var channelName:String?
-    public var channelIcon:String?
-    public var videoTitle:String?
-    public var videoDescription:String?
-    public var videoDuration:String?
-    public var defaultThumbnail:Thumbnail?
-    public var standardThumbnail:Thumbnail?
-    public var highThumbnail:Thumbnail?
-    public var mediumThumbnail:Thumbnail?
-    public var maxresThumbnail:Thumbnail?
-    public var videoViews:Int64?
-    public var videoLikes:Int64?
-    public var videoDislikes:Int64?
-    public var videoComments:Int64?
-    public var videoFavorites:Int64?
-    public var publishedAt:NSDate?
-    public var playlistId:String?
-    public var channel:YTChannel?
-    public var comments:[YTComment] = []
+open class YTVideo:YTAPI {
+    open var etag:String?
+    open var id:String?
+    open var videoId:String?
+    open var channelId:String?
+    open var channelName:String?
+    open var channelIcon:String?
+    open var videoTitle:String?
+    open var videoDescription:String?
+    open var videoDuration:String?
+    open var defaultThumbnail:Thumbnail?
+    open var standardThumbnail:Thumbnail?
+    open var highThumbnail:Thumbnail?
+    open var mediumThumbnail:Thumbnail?
+    open var maxresThumbnail:Thumbnail?
+    open var videoViews:Int64?
+    open var videoLikes:Int64?
+    open var videoDislikes:Int64?
+    open var videoComments:Int64?
+    open var videoFavorites:Int64?
+    open var publishedAt:Date?
+    open var playlistId:String?
+    open var channel:YTChannel?
+    open var comments:[YTComment] = []
     
     
     public struct Thumbnail {
@@ -41,76 +41,76 @@ public class YTVideo:YTAPI {
     }
 
     
-    public func getStatistics(part:String = "statistics", pageToken:String?, completitionHandler:()->()) {
+    open func getStatistics(_ part:String = "statistics", pageToken:String?, completitionHandler:@escaping ()->()) {
         guard let videoId = self.videoId else { return }
         guard let url = getStatisticsURL(part, videoId:videoId , pageToken:pageToken) else { return }
         getStatistics(url, completitionHandler:completitionHandler)
     }
     
-    public func getComments(part:String = "snippet,replies", maxResults:String = "100", order:String = "relevance", pageToken:String?, completitionHandler:()->()) {
+    open func getComments(_ part:String = "snippet,replies", maxResults:String = "100", order:String = "relevance", pageToken:String?, completitionHandler:@escaping ()->()) {
         guard let videoId = self.videoId else { return }
         guard let url = getCommentsURL(part, maxResults: maxResults, order: order, videoId: videoId, pageToken: pageToken) else { return }
         getComments(url, completitionHandler: completitionHandler)
     }
     
     // MARK: - Private Methods
-    private func getStatisticsURL(part:String, videoId:String, pageToken:String?) -> NSURL? {
-        return NSURL(string: APIConstants.videoStatisticsURL, args: [part, videoId, apiKey])
+    fileprivate func getStatisticsURL(_ part:String, videoId:String, pageToken:String?) -> URL? {
+        return URL(string: APIConstants.videoStatisticsURL, args: [part, videoId, apiKey])
     }
     
-    private func getCommentsURL(part:String, maxResults:String, order:String, videoId:String, pageToken:String?) -> NSURL? {
+    fileprivate func getCommentsURL(_ part:String, maxResults:String, order:String, videoId:String, pageToken:String?) -> URL? {
         let pgToken:String = pageToken == nil ? "" : pageToken!
-        return NSURL(string: APIConstants.videoCommentThreads, args: [part, maxResults, order, videoId, pgToken, apiKey])
+        return URL(string: APIConstants.videoCommentThreads, args: [part, maxResults, order, videoId, pgToken, apiKey])
     }
     
-    private func getStatistics(url:NSURL, completitionHandler:()->()) {
-        NSURLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
-            NSURLSession.validateURLSessionDataTask(data, response: response, error: error, completitionHandler: { (data, error) in
-                self.getStatistics(NSJSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+    fileprivate func getStatistics(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+            URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
+                self.getStatistics(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
             })
         }
     }
     
-    private func getComments(url:NSURL, completitionHandler:()->()) {
-        NSURLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
-            NSURLSession.validateURLSessionDataTask(data, response: response, error: error, completitionHandler: { (data, error) in
-                self.getComments(NSJSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+    fileprivate func getComments(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+            URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
+                self.getComments(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
             })
         }
     }
     
     
-    private func getStatistics(statisticsDictionary:NSDictionary?, completitionHandler:()->()) {
-        guard let statisticsItems = statisticsDictionary?.valueForKeyPath("items") as? NSArray else { return }
+    fileprivate func getStatistics(_ statisticsDictionary:NSDictionary?, completitionHandler:()->()) {
+        guard let statisticsItems = statisticsDictionary?.value(forKeyPath: "items") as? NSArray else { return }
         guard statisticsItems.count > 0 else { return }
         guard let statisticsItem = statisticsItems.firstObject as? NSDictionary else { return }
-        guard let statistics = statisticsItem.valueForKey("statistics") as? NSDictionary else { return }
+        guard let statistics = statisticsItem.value(forKey: "statistics") as? NSDictionary else { return }
         
-        videoViews = Int64(statistics.valueForKey("viewCount") as! String)
-        videoLikes = Int64(statistics.valueForKey("likeCount") as! String)
-        videoDislikes = Int64(statistics.valueForKey("dislikeCount") as! String)
-        videoComments = Int64(statistics.valueForKey("commentCount") as! String)
-        videoFavorites = Int64(statistics.valueForKey("favoriteCount") as! String)
+        videoViews = Int64(statistics.value(forKey: "viewCount") as! String)
+        videoLikes = Int64(statistics.value(forKey: "likeCount") as! String)
+        videoDislikes = Int64(statistics.value(forKey: "dislikeCount") as! String)
+        videoComments = Int64(statistics.value(forKey: "commentCount") as! String)
+        videoFavorites = Int64(statistics.value(forKey: "favoriteCount") as! String)
         
         completitionHandler()
     }
     
-    private func getComments(commentsDictionary:NSDictionary?, completitionHandler:()->()) {
+    fileprivate func getComments(_ commentsDictionary:NSDictionary?, completitionHandler:()->()) {
         defer { completitionHandler() }
-        guard let comments = commentsDictionary?.valueForKeyPath("items") as? NSArray else { return }
+        guard let comments = commentsDictionary?.value(forKeyPath: "items") as? NSArray else { return }
         
-        let nextPageToken = commentsDictionary?.valueForKey("nextPageToken") as? String
-        let prevPageToken = commentsDictionary?.valueForKey("prevPageToken") as? String
+        let nextPageToken = commentsDictionary?.value(forKey: "nextPageToken") as? String
+        let prevPageToken = commentsDictionary?.value(forKey: "prevPageToken") as? String
         
         for comment in comments {
             guard let comment = comment as? NSDictionary else { continue }
-            guard let toplevelComment = comment.valueForKeyPath("snippet.topLevelComment") as? NSDictionary else { continue }
+            guard let toplevelComment = comment.value(forKeyPath: "snippet.topLevelComment") as? NSDictionary else { continue }
             
             let ytComment = getComment(toplevelComment)
             ytComment.nextPageToken = nextPageToken
             ytComment.prevPageToken = prevPageToken
             
-            if let replies = comment.valueForKeyPath("replies.comments") as? NSArray {
+            if let replies = comment.value(forKeyPath: "replies.comments") as? NSArray {
                 for reply in replies {
                     guard let reply = reply as? NSDictionary else { continue }
                     let ytReply = getComment(reply)
@@ -122,37 +122,37 @@ public class YTVideo:YTAPI {
         }
     }
     
-    private func getComment(commentSnippet:NSDictionary) -> YTComment {
+    fileprivate func getComment(_ commentSnippet:NSDictionary) -> YTComment {
         let ytComment = YTComment()
         
-        ytComment.id = commentSnippet.valueForKeyPath("id") as? String
-        ytComment.authorChannelId = commentSnippet.valueForKeyPath("snippet.authorChannelId.value") as? String
-        ytComment.authorChannelName = commentSnippet.valueForKeyPath("snippet.authorDisplayName") as? String
-        ytComment.authorChannelURL = commentSnippet.valueForKeyPath("snippet.authorChannelUrl") as? String
-        ytComment.authorProfileImageURL = commentSnippet.valueForKeyPath("snippet.authorProfileImageUrl") as? String
-        ytComment.canRate = commentSnippet.valueForKeyPath("snippet.canRate") as? Bool
-        ytComment.commentText = commentSnippet.valueForKeyPath("snippet.textDisplay") as? String
-        ytComment.videoId = commentSnippet.valueForKeyPath("snippet.videoId") as? String
-        ytComment.viewerRating = commentSnippet.valueForKeyPath("snippet.viewerRating") as? String
+        ytComment.id = commentSnippet.value(forKeyPath: "id") as? String
+        ytComment.authorChannelId = commentSnippet.value(forKeyPath: "snippet.authorChannelId.value") as? String
+        ytComment.authorChannelName = commentSnippet.value(forKeyPath: "snippet.authorDisplayName") as? String
+        ytComment.authorChannelURL = commentSnippet.value(forKeyPath: "snippet.authorChannelUrl") as? String
+        ytComment.authorProfileImageURL = commentSnippet.value(forKeyPath: "snippet.authorProfileImageUrl") as? String
+        ytComment.canRate = commentSnippet.value(forKeyPath: "snippet.canRate") as? Bool
+        ytComment.commentText = commentSnippet.value(forKeyPath: "snippet.textDisplay") as? String
+        ytComment.videoId = commentSnippet.value(forKeyPath: "snippet.videoId") as? String
+        ytComment.viewerRating = commentSnippet.value(forKeyPath: "snippet.viewerRating") as? String
         
-        if let likeCount = commentSnippet.valueForKeyPath("snippet.likeCount") as? Int {
+        if let likeCount = commentSnippet.value(forKeyPath: "snippet.likeCount") as? Int {
             ytComment.likeCount = Int64(likeCount)
         }
         
-        if let publishedAt = commentSnippet.valueForKeyPath("snippet.publishedAt") as? String {
-            let posix = NSLocale(localeIdentifier: "en_US_POSIX")
-            let dateFormatter = NSDateFormatter()
+        if let publishedAt = commentSnippet.value(forKeyPath: "snippet.publishedAt") as? String {
+            let posix = Locale(identifier: "en_US_POSIX")
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
             dateFormatter.locale = posix
-            ytComment.publishedAt = dateFormatter.dateFromString(publishedAt)
+            ytComment.publishedAt = dateFormatter.date(from: publishedAt)
         }
         
-        if let updatedAt = commentSnippet.valueForKeyPath("snippet.updatedAt") as? String {
-            let posix = NSLocale(localeIdentifier: "en_US_POSIX")
-            let dateFormatter = NSDateFormatter()
+        if let updatedAt = commentSnippet.value(forKeyPath: "snippet.updatedAt") as? String {
+            let posix = Locale(identifier: "en_US_POSIX")
+            let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
             dateFormatter.locale = posix
-            ytComment.updatedAt = dateFormatter.dateFromString(updatedAt)
+            ytComment.updatedAt = dateFormatter.date(from: updatedAt)
         }
         
         return ytComment

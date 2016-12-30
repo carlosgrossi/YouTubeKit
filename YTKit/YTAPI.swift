@@ -8,8 +8,8 @@
 
 import Foundation
 
-public class YTAPI {
-    public var apiKey:String
+open class YTAPI {
+    open var apiKey:String
     
     public init(apiKey:String) {
         self.apiKey = apiKey

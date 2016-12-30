@@ -8,10 +8,10 @@
 
 import Foundation
 
-public class YTAccessController {
+open class YTAccessController {
     
-    public static let standardController = YTAccessController()
-    public var apiKey:String
+    open static let standardController = YTAccessController()
+    open var apiKey:String
     
     public init(apiKey:String) {
         self.apiKey = apiKey

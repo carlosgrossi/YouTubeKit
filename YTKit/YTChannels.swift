@@ -8,79 +8,79 @@
 
 import Foundation
 
-public class YTChannels: YTAPI {
+open class YTChannels: YTAPI {
     
-    public var etag:String?
-    public var channelsIds:[String] = []
-    public var totalResults:Int?
-    public var resultsPerPage:Int?
-    public var nextPageToken:String?
-    public var prevPageToken:String?
-    public var items:[YTChannel] = []
+    open var etag:String?
+    open var channelsIds:[String] = []
+    open var totalResults:Int?
+    open var resultsPerPage:Int?
+    open var nextPageToken:String?
+    open var prevPageToken:String?
+    open var items:[YTChannel] = []
     
     
-    public func getChannels(part:String = "snippet", channelsIds:[String], pageToken:String?, completitionHandler:()->()) {
+    open func getChannels(_ part:String = "snippet", channelsIds:[String], pageToken:String?, completitionHandler:@escaping ()->()) {
         guard channelsIds.count > 0 else { completitionHandler(); return }
         guard let url = getChannelsURL(part, channelsIds:channelsIds , pageToken:pageToken) else { completitionHandler(); return }
         self.channelsIds = channelsIds
         getChannels(url, completitionHandler:completitionHandler)
     }
     
-    public func loadNextPage(completitionHandler:()->()) {
+    open func loadNextPage(_ completitionHandler:()->()) {
     }
     
     // MARK: - Private Methods
-    private func getChannelsURL(part:String, channelsIds:[String], pageToken:String?) -> NSURL? {
+    fileprivate func getChannelsURL(_ part:String, channelsIds:[String], pageToken:String?) -> URL? {
         let pgToken:String = pageToken == nil ? "" : pageToken!
         
         var channelsIdsStr = ""
         for channelId in channelsIds {
-            channelsIdsStr = channelsIdsStr.stringByAppendingString(channelId).stringByAppendingString(",")
+            channelsIdsStr = (channelsIdsStr + channelId) + ","
         }
         channelsIdsStr = String(channelsIdsStr.characters.dropLast())
         
-        return NSURL(string: APIConstants.channelsURL, args: [part, channelsIdsStr, pgToken, apiKey])
+        return URL(string: APIConstants.channelsURL, args: [part, channelsIdsStr, pgToken, apiKey])
     }
     
-    private func getChannels(url:NSURL, completitionHandler:()->()) {
-        NSURLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
-            NSURLSession.validateURLSessionDataTask(data, response: response, error: error, completitionHandler: { (data, error) in
-                self.getChannels(NSJSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+    fileprivate func getChannels(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+            URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
+                self.getChannels(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
             })
         }
     }
     
-    private func getChannels(playlistDictionary:NSDictionary?, completitionHandler:()->()) {
+    fileprivate func getChannels(_ playlistDictionary:NSDictionary?, completitionHandler:()->()) {
         guard let channelsDictionary = playlistDictionary else { return }
         
-        etag = channelsDictionary.valueForKeyPath("etag") as? String
-        totalResults = channelsDictionary.valueForKeyPath("pageInfo.totalResults") as? Int
-        resultsPerPage = channelsDictionary.valueForKeyPath("pageInfo.resultsPerPage") as? Int
-        nextPageToken = channelsDictionary.valueForKeyPath("nextPageToken") as? String
-        prevPageToken = channelsDictionary.valueForKeyPath("prevPageToken") as? String
+        etag = channelsDictionary.value(forKeyPath: "etag") as? String
+        totalResults = channelsDictionary.value(forKeyPath: "pageInfo.totalResults") as? Int
+        resultsPerPage = channelsDictionary.value(forKeyPath: "pageInfo.resultsPerPage") as? Int
+        nextPageToken = channelsDictionary.value(forKeyPath: "nextPageToken") as? String
+        prevPageToken = channelsDictionary.value(forKeyPath: "prevPageToken") as? String
         
-        if let ytChannels = channelsDictionary.valueForKeyPath("items") as? NSArray {
+        if let ytChannels = channelsDictionary.value(forKeyPath: "items") as? NSArray {
             for ytChannel in ytChannels {
                 let channel = YTChannel()
-                channel.etag = ytChannel.valueForKeyPath("etag") as? String
-                channel.id = ytChannel.valueForKeyPath("id") as? String
-                channel.country = ytChannel.valueForKeyPath("country") as? String
-                channel.customUrl = ytChannel.valueForKeyPath("customURL") as? String
-                channel.description = ytChannel.valueForKeyPath("description") as? String
-                channel.title = ytChannel.valueForKeyPath("title") as? String
+                channel.etag = (ytChannel as AnyObject).value(forKeyPath: "etag") as? String
+                channel.id = (ytChannel as AnyObject).value(forKeyPath: "id") as? String
+                channel.country = (ytChannel as AnyObject).value(forKeyPath: "country") as? String
+                channel.customUrl = (ytChannel as AnyObject).value(forKeyPath: "customURL") as? String
+                channel.description = (ytChannel as AnyObject).value(forKeyPath: "description") as? String
+                channel.title = (ytChannel as AnyObject).value(forKeyPath: "title") as? String
                 
                 
-                if let publishedAt = ytChannel.valueForKeyPath("snippet.publishedAt") as? String {
-                    let posix = NSLocale(localeIdentifier: "en_US_POSIX")
-                    let dateFormatter = NSDateFormatter()
+                if let publishedAt = (ytChannel as AnyObject).value(forKeyPath: "snippet.publishedAt") as? String {
+                    let posix = Locale(identifier: "en_US_POSIX")
+                    let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
                     dateFormatter.locale = posix
-                    channel.publishedAt = dateFormatter.dateFromString(publishedAt)
+                    channel.publishedAt = dateFormatter.date(from: publishedAt)
                 }
                 
-                channel.defaultThumbnail = ytChannel.valueForKeyPath("snippet.thumbnails.default.url") as? String
-                channel.highThumbnail = ytChannel.valueForKeyPath("snippet.thumbnails.high.url") as? String
-                channel.mediumThumbnail = ytChannel.valueForKeyPath("snippet.thumbnails.medium.url") as? String
+                channel.defaultThumbnail = (ytChannel as AnyObject).value(forKeyPath: "snippet.thumbnails.default.url") as? String
+                channel.highThumbnail = (ytChannel as AnyObject).value(forKeyPath: "snippet.thumbnails.high.url") as? String
+                channel.mediumThumbnail = (ytChannel as AnyObject).value(forKeyPath: "snippet.thumbnails.medium.url") as? String
                 
                 items.append(channel)
             }

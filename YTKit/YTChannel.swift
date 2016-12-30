@@ -8,19 +8,19 @@
 
 import Foundation
 
-public class YTChannel {
+open class YTChannel {
     
-    public var etag:String?
-    public var id:String?
-    public var title:String?
-    public var description:String?
-    public var customUrl:String?
-    public var subscribersCount:Int64?
-    public var publishedAt:NSDate?
-    public var defaultThumbnail:String?
-    public var mediumThumbnail:String?
-    public var highThumbnail:String?
-    public var country:String?
-    public var thumbnailImage:UIImage?
+    open var etag:String?
+    open var id:String?
+    open var title:String?
+    open var description:String?
+    open var customUrl:String?
+    open var subscribersCount:Int64?
+    open var publishedAt:Date?
+    open var defaultThumbnail:String?
+    open var mediumThumbnail:String?
+    open var highThumbnail:String?
+    open var country:String?
+    open var thumbnailImage:UIImage?
 
 }

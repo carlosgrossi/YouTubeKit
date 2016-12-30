@@ -8,26 +8,26 @@
 
 import Foundation
 
-public class YTComment {
+open class YTComment {
     
-    public var id:String?
-    public var authorChannelId:String?
-    public var authorChannelURL:String?
-    public var authorChannelName:String?
-    public var authorProfileImageURL:String?
-    public var commentText:String?
-    public var likeCount:Int64 = 0
-    public var publishedAt:NSDate?
-    public var updatedAt:NSDate?
-    public var videoId:String?
-    public var viewerRating:String?
-    public var canRate:Bool?
-    public var canReply:Bool?
-    public var isPublic:Bool?
+    open var id:String?
+    open var authorChannelId:String?
+    open var authorChannelURL:String?
+    open var authorChannelName:String?
+    open var authorProfileImageURL:String?
+    open var commentText:String?
+    open var likeCount:Int64 = 0
+    open var publishedAt:Date?
+    open var updatedAt:Date?
+    open var videoId:String?
+    open var viewerRating:String?
+    open var canRate:Bool?
+    open var canReply:Bool?
+    open var isPublic:Bool?
     
-    public var replies:[YTComment] = []
-    public var totalReplyCount:Int64 = 0
+    open var replies:[YTComment] = []
+    open var totalReplyCount:Int64 = 0
     
-    public var nextPageToken:String?
-    public var prevPageToken:String?
+    open var nextPageToken:String?
+    open var prevPageToken:String?
 }

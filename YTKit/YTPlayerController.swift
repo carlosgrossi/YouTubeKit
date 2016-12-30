@@ -10,22 +10,22 @@ import ExtensionKit
 
 // MARK: - YTPlayerControllerDelegate Protocol
 @objc public protocol YTPlayerControllerDelegate {
-    optional func playerViewDidBecomeReady(playerView: YTPlayerView)
-    optional func playerView(playerView: YTPlayerView!, didPlayTime playTime: Float)
-    optional func playerView(playerView: YTPlayerView!, receivedError error: YTPlayerError)
-    optional func playerView(playerView: YTPlayerView!, didChangeToState state: YTPlayerState)
-    optional func playerView(playerView: YTPlayerView!, didChangeToQuality quality: YTPlaybackQuality)
+    @objc optional func playerViewDidBecomeReady(_ playerView: YTPlayerView)
+    @objc optional func playerView(_ playerView: YTPlayerView!, didPlayTime playTime: Float)
+    @objc optional func playerView(_ playerView: YTPlayerView!, receivedError error: YTPlayerError)
+    @objc optional func playerView(_ playerView: YTPlayerView!, didChangeToState state: YTPlayerState)
+    @objc optional func playerView(_ playerView: YTPlayerView!, didChangeToQuality quality: YTPlaybackQuality)
 }
 
 // MARK: - YTPlayerController
-public class YTPlayerController: NSObject, YTPlayerViewDelegate {
+open class YTPlayerController: NSObject, YTPlayerViewDelegate {
     
-    public var playerView:YTPlayerView?
+    open var playerView:YTPlayerView?
     
-    public static let sharedController = YTPlayerController()
-    public var delegate:YTPlayerControllerDelegate?
-    public var videoID:String?
-    public var playerParameters:[NSObject : AnyObject]
+    open static let sharedController = YTPlayerController()
+    open var delegate:YTPlayerControllerDelegate?
+    open var videoID:String?
+    open var playerParameters:[AnyHashable: Any]
     
     // MARK: - Initializers
     override init() {
@@ -40,48 +40,48 @@ public class YTPlayerController: NSObject, YTPlayerViewDelegate {
     }
     
     // MARK: - Methods
-    public func loadVideoUnderContainerView(containerView:UIView, withSuggestedPlaybackQuality suggestedPlaybackQuality:YTPlaybackQuality) {
-        playerView = YTPlayerView(frame: CGRectMake(0, 0, containerView.frame.width, containerView.frame.height))
-        playerView?.backgroundColor = UIColor.clearColor()
+    open func loadVideoUnderContainerView(_ containerView:UIView, withSuggestedPlaybackQuality suggestedPlaybackQuality:YTPlaybackQuality) {
+        playerView = YTPlayerView(frame: CGRect(x: 0, y: 0, width: containerView.frame.width, height: containerView.frame.height))
+        playerView?.backgroundColor = UIColor.clear
         
         guard let localPlayerView = playerView else { return }
         
         localPlayerView.delegate = self
-        localPlayerView.loadWithVideoId(videoID, playerVars: playerParameters)
+        localPlayerView.load(withVideoId: videoID, playerVars: playerParameters)
         localPlayerView.setPlaybackQuality(suggestedPlaybackQuality)
         
         containerView.addSubview(localPlayerView)
     }
     
-    public func loadVideoID(videoID:String) {
+    open func loadVideoID(_ videoID:String) {
         self.videoID = videoID
-        playerView?.loadWithVideoId(self.videoID)
+        playerView?.load(withVideoId: self.videoID)
     }
     
-    public func unloadVideo() {
+    open func unloadVideo() {
         playerView?.clearVideo()
         playerView?.removeWebView()
         playerView?.removeFromSuperview()
     }
     
     // MARK: - YTPlayerViewDelegate
-    @objc public func playerViewDidBecomeReady(playerView: YTPlayerView!) {
+    @objc open func playerViewDidBecomeReady(_ playerView: YTPlayerView!) {
         delegate?.playerViewDidBecomeReady?(playerView)
     }
     
-    @objc public func playerView(playerView: YTPlayerView!, didPlayTime playTime: Float) {
+    @objc open func playerView(_ playerView: YTPlayerView!, didPlayTime playTime: Float) {
         delegate?.playerView?(playerView, didPlayTime: playTime)
     }
     
-    @objc public func playerView(playerView: YTPlayerView!, receivedError error: YTPlayerError) {
+    @objc open func playerView(_ playerView: YTPlayerView!, receivedError error: YTPlayerError) {
         delegate?.playerView?(playerView, receivedError: error)
     }
     
-    @objc public func playerView(playerView: YTPlayerView!, didChangeToState state: YTPlayerState) {
+    @objc open func playerView(_ playerView: YTPlayerView!, didChangeTo state: YTPlayerState) {
         delegate?.playerView?(playerView, didChangeToState: state)
     }
     
-    @objc public func playerView(playerView: YTPlayerView!, didChangeToQuality quality: YTPlaybackQuality) {
+    @objc open func playerView(_ playerView: YTPlayerView!, didChangeTo quality: YTPlaybackQuality) {
         delegate?.playerView?(playerView, didChangeToQuality: quality)
     }
 }

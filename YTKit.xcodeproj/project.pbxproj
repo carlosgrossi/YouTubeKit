@@ -172,6 +172,7 @@
 					0E172F071D346FC700407E13 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = K34G3U98RH;
+						LastSwiftMigration = 0820;
 					};
 				};
 			};
@@ -355,7 +356,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -377,7 +378,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.DayOneDigital.YTKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
