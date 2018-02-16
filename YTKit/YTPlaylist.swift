@@ -49,17 +49,17 @@ open class YTPlaylist: YTAPI {
     }
     
     fileprivate func getPlaylistItems(_ url:URL, completitionHandler:@escaping ()->()) {
-        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+		URLSession.dataTask(with: url) { (data, response, error) in
             URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
-                self.getPlaylistItems(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+                self.getPlaylistItems(JSONSerialization.jsonObject(with: data), completitionHandler: completitionHandler)
             })
         }
     }
     
     fileprivate func getVideosDetails(_ url:URL, completitionHandler:@escaping ()->()) {
-        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+        URLSession.dataTask(with: url) { (data, response, error) in
             URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
-                self.getVideosDetails(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+                self.getVideosDetails(JSONSerialization.jsonObject(with: data), completitionHandler: completitionHandler)
             })
         }
     }
@@ -102,7 +102,21 @@ open class YTPlaylist: YTAPI {
             video.channelName = item.value(forKeyPath: "snippet.channelTitle") as? String
             video.videoTitle = item.value(forKeyPath: "snippet.title") as? String
             video.videoDescription = item.value(forKeyPath: "snippet.description") as? String
-            video.videoDuration = item.value(forKeyPath: "snippet.description") as? String
+            
+            if let duration = item.value(forKeyPath: "contentDetails.duration") as? String {
+                let durationComponents = duration.components(separatedBy: CharacterSet.letters).filter({$0 != ""})
+                var index:Int = 0
+                
+                for component in durationComponents.reversed() {
+                    switch index {
+                    case 0: video.videoDuration = "\(component)s \(video.videoDuration ?? "")"
+                    case 1: video.videoDuration = "\(component)m \(video.videoDuration ?? "")"
+                    case 2: video.videoDuration = "\(component)h \(video.videoDuration ?? "")"
+                    default:break
+                    }
+                    index += 1
+                }
+            }
             
             if let publishedAt = item.value(forKeyPath: "snippet.publishedAt") as? String {
                 let posix = Locale(identifier: "en_US_POSIX")

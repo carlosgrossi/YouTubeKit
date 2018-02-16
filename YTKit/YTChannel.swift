@@ -10,6 +10,8 @@ import Foundation
 
 open class YTChannel {
     
+    public init() {}
+    
     open var etag:String?
     open var id:String?
     open var title:String?

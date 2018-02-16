@@ -43,9 +43,9 @@ open class YTChannels: YTAPI {
     }
     
     fileprivate func getChannels(_ url:URL, completitionHandler:@escaping ()->()) {
-        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+		URLSession.dataTask(with: url) { (data, response, error) in
             URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
-                self.getChannels(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+                self.getChannels(JSONSerialization.jsonObject(with: data), completitionHandler: completitionHandler)
             })
         }
     }

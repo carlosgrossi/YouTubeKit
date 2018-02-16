@@ -681,10 +681,16 @@ NSString static *const kYTPlayerStaticProxyRegexPattern = @"^https://content.goo
 
   // Remove the existing webView to reset any state
   [self.webView removeFromSuperview];
-    dispatch_sync(dispatch_get_main_queue(), ^{
+    if ([NSThread isMainThread]) {
         _webView = [self createNewWebView];
         [self addSubview:self.webView];
-    });
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            _webView = [self createNewWebView];
+            [self addSubview:self.webView];
+        });
+    }
+    
   
   NSError *error = nil;
   NSString *path = [[NSBundle mainBundle] pathForResource:@"YTPlayerView-iframe-player"

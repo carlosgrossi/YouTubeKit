@@ -38,8 +38,20 @@ open class YTVideo:YTAPI {
         public var height:Int?
         public var width:Int?
         public var url:String?
+        
+        public init(height: Int?, width: Int?, url: String?) {
+            self.height = height
+            self.width = width
+            self.url = url
+        }
     }
 
+    
+    open func getSnippet(_ part:String = "snippet", pageToken:String?, completitionHandler:@escaping ()->()) {
+        guard let videoId = self.videoId else { return }
+        guard let url = getSnippetURL(part, videoId:videoId , pageToken:pageToken) else { return }
+        getSnippet(url, completitionHandler:completitionHandler)
+    }
     
     open func getStatistics(_ part:String = "statistics", pageToken:String?, completitionHandler:@escaping ()->()) {
         guard let videoId = self.videoId else { return }
@@ -54,6 +66,10 @@ open class YTVideo:YTAPI {
     }
     
     // MARK: - Private Methods
+    fileprivate func getSnippetURL(_ part:String, videoId:String, pageToken:String?) -> URL? {
+        return URL(string: APIConstants.videoStatisticsURL, args: [part, videoId, apiKey])
+    }
+    
     fileprivate func getStatisticsURL(_ part:String, videoId:String, pageToken:String?) -> URL? {
         return URL(string: APIConstants.videoStatisticsURL, args: [part, videoId, apiKey])
     }
@@ -63,22 +79,58 @@ open class YTVideo:YTAPI {
         return URL(string: APIConstants.videoCommentThreads, args: [part, maxResults, order, videoId, pgToken, apiKey])
     }
     
-    fileprivate func getStatistics(_ url:URL, completitionHandler:@escaping ()->()) {
-        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+    fileprivate func getSnippet(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.dataTask(with: url) { (data, response, error) in
             URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
-                self.getStatistics(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+				self.getSnippet(JSONSerialization.jsonObject(with: data), completitionHandler: completitionHandler)
+            })
+        }
+    }
+    
+    fileprivate func getStatistics(_ url:URL, completitionHandler:@escaping ()->()) {
+        URLSession.dataTask(with: url) { (data, response, error) in
+            URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
+                self.getStatistics(JSONSerialization.jsonObject(with: data), completitionHandler: completitionHandler)
             })
         }
     }
     
     fileprivate func getComments(_ url:URL, completitionHandler:@escaping ()->()) {
-        URLSession.urlSessionDataTaskWithURL(url) { (data, response, error) in
+        URLSession.dataTask(with: url) { (data, response, error) in
             URLSession.validateURLSessionDataTask(data, response: response, error: error as NSError?, completitionHandler: { (data, error) in
-                self.getComments(JSONSerialization.serializeDataToDictionary(data), completitionHandler: completitionHandler)
+                self.getComments(JSONSerialization.jsonObject(with: data), completitionHandler: completitionHandler)
             })
         }
     }
     
+    
+    fileprivate func getSnippet(_ statisticsDictionary:NSDictionary?, completitionHandler:()->()) {
+        guard let snippetItems = statisticsDictionary?.value(forKeyPath: "items") as? NSArray else { return }
+        guard snippetItems.count > 0 else { return }
+        guard let snippetItem = snippetItems.firstObject as? NSDictionary else { return }
+        guard let snippet = snippetItem.value(forKey: "snippet") as? NSDictionary else { return }
+        
+        
+        channelId = snippet.value(forKey: "channelId") as? String
+        channelName = snippet.value(forKey: "channelTitle") as? String
+        videoTitle = snippet.value(forKey: "title") as? String
+        videoDescription = snippet.value(forKey: "description") as? String
+        defaultThumbnail = getThumbnailInfo(snippet, keyPath: "thumbnails.default")
+        standardThumbnail = getThumbnailInfo(snippet, keyPath: "thumbnails.standard")
+        highThumbnail = getThumbnailInfo(snippet, keyPath: "thumbnails.high")
+        mediumThumbnail = getThumbnailInfo(snippet, keyPath: "thumbnails.medium")
+        maxresThumbnail = getThumbnailInfo(snippet, keyPath: "thumbnails.maxres")
+        
+        if let publishedAt = snippet.value(forKeyPath: "snippet.publishedAt") as? String {
+            let posix = Locale(identifier: "en_US_POSIX")
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            dateFormatter.locale = posix
+            self.publishedAt = dateFormatter.date(from: publishedAt)
+        }
+        
+        completitionHandler()
+    }
     
     fileprivate func getStatistics(_ statisticsDictionary:NSDictionary?, completitionHandler:()->()) {
         guard let statisticsItems = statisticsDictionary?.value(forKeyPath: "items") as? NSArray else { return }
@@ -156,5 +208,16 @@ open class YTVideo:YTAPI {
         }
         
         return ytComment
+    }
+    
+    fileprivate func getThumbnailInfo(_ playlistVideo:NSDictionary, keyPath:String) -> YTVideo.Thumbnail? {
+        if let thumbnail = playlistVideo.value(forKeyPath: keyPath) as? NSDictionary {
+            let height = thumbnail.value(forKeyPath: "height") as? Int
+            let width = thumbnail.value(forKeyPath: "width") as? Int
+            let url = thumbnail.value(forKeyPath: "url") as? String
+            
+            return YTVideo.Thumbnail(height: height, width: width, url: url)
+        }
+        return nil
     }
 }

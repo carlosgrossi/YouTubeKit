@@ -43,11 +43,11 @@
 		0E172F2F1D34786900407E13 /* YTPlayerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlayerController.swift; sourceTree = "<group>"; };
 		0E172F3D1D347CC300407E13 /* ExtensionKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ExtensionKit.xcodeproj; path = ../ExtensionKit/ExtensionKit.xcodeproj; sourceTree = "<group>"; };
 		0E172F681D35A51100407E13 /* YTAccessController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTAccessController.swift; sourceTree = "<group>"; };
-		0EC440AF1D4FB19600786033 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		0EFC1FA31D4FBC4300CEDBB9 /* YTPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTPlaylist.swift; sourceTree = "<group>"; };
-		0EFC1FA61D4FBDC800CEDBB9 /* YTVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTVideo.swift; sourceTree = "<group>"; };
+		0EC440AF1D4FB19600786033 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Constants.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0EFC1FA31D4FBC4300CEDBB9 /* YTPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = YTPlaylist.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		0EFC1FA61D4FBDC800CEDBB9 /* YTVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = YTVideo.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0EFC1FAA1D4FDEF800CEDBB9 /* YTAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTAPI.swift; sourceTree = "<group>"; };
-		0EFC1FAC1D52A12600CEDBB9 /* YTChannels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTChannels.swift; sourceTree = "<group>"; };
+		0EFC1FAC1D52A12600CEDBB9 /* YTChannels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = YTChannels.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		0EFC1FB21D52AC2D00CEDBB9 /* YTChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTChannel.swift; sourceTree = "<group>"; };
 		0EFC1FC71D5D27E200CEDBB9 /* YTComment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YTComment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
